@@ -47,7 +47,7 @@ def check_credentials(credentials: HTTPBasicCredentials = Depends(security)):
 def secure_endpoint(username=Depends(check_credentials)):
     return {"message": f"Hello, {username}! You are authorized."}
 
-books: List[dict] = [
+book: List[dict] = [
     {"id": 1, "name": "Олена Іваненко", "email": "olena@example.com", "city": "Київ"},
     {"id": 2, "name": "Андрій Петренко", "email": "andriy@example.com", "city": "Львів"},
     {"id": 3, "name": "Марія Коваленко", "email": "maria@example.com", "city": "Одеса"},
@@ -71,6 +71,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db), username: str =
     db.refresh(db_user)
     return db_user
 
+
 @app.get("/users/")
 def read_users(
     db: Session = Depends(get_db),
@@ -78,14 +79,15 @@ def read_users(
 ):
     return db.query(Book).all()
 
+
 @app.delete("/users/{user_id}")
 async def delete_user(
     user_id: int,
     username: str = Depends(check_credentials)
 ):
-    for u in books:
+    for u in book:
         if u["id"] == user_id:
-            books.remove(u)
+            book.remove(u)
             return {"message": f"Користувача видалено користувачем: {username}"}
     raise HTTPException(status_code=404, detail="Користувача не знайдено")
 
